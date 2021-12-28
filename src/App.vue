@@ -19,5 +19,6 @@ import StockChart from './components/StockChart.vue'
 html, body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 </style>

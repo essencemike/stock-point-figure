@@ -15,7 +15,6 @@ function parseData() {
 }
 
 function stockParse(data: any, fn: any) {
-  console.log(data)
   const { items = [] } = data;
   return items.map((item: any) => fn({
     date: item[0],

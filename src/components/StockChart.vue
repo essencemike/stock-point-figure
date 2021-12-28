@@ -2,9 +2,11 @@
 import { ref, onMounted, reactive } from 'vue'
 import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus'
+import { InfoFilled } from '@element-plus/icons-vue';
 import { getData } from "../utils/util"
 import { pointAndFigure } from '../utils/pAndF';
 import { testData } from '../utils/test';
+import tip from '../assets/boxSize.png';
 
 const formInline = reactive({
   stock: '',
@@ -32,7 +34,7 @@ function update() {
   const { reversal, boxSize, period, stock } = formInline
   if (!stock) return;
   getData(stock, period).then(data => {
-    const { result = [], min = 0, max = 0 } = pointAndFigure(data, { reversal, boxSize }) || {}
+    const { result = [], min = 0, max = 0 } = pointAndFigure(data, { reversal: +reversal, boxSize: +boxSize }) || {}
     const oData = [];
     for (let i = 0; i < result.length; i++) {
       for(let j = 0; j < result[i].boxes.length; j++) {
@@ -59,7 +61,7 @@ function update() {
       },
       yAxis: {
         type: 'value',
-        interval: boxSize,
+        interval: +boxSize,
         min: (min - 3 * boxSize),
         max: (max + 3 * boxSize),
         splitLine: {
@@ -125,6 +127,14 @@ onMounted(() => {
     <el-form-item>
       <el-button type="primary" @click="onSubmit">更新</el-button>
     </el-form-item>
+    <el-form-item>
+       <el-popover placement="bottom" :width="200" trigger="click">
+        <template #reference>
+          <el-icon class="tip" :size="40" color="#000"><info-filled /></el-icon>
+        </template>
+        <el-image :src="tip" fit="cover"></el-image>
+      </el-popover>
+    </el-form-item>
   </el-form>
 
   <div id="main"></div>
@@ -134,5 +144,11 @@ onMounted(() => {
 #main {
   width: 100%;
   height: 800px;
+}
+.demo-form-inline {
+  margin-top: 10px;
+}
+.tip {
+  cursor: pointer;
 }
 </style>
