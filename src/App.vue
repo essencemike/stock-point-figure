@@ -5,6 +5,7 @@ import StockChart from './components/StockChart.vue'
 </script>
 
 <template>
+  <h2 class="title">点数图生成工具</h2>
   <StockChart />
 </template>
 
@@ -20,5 +21,10 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+.title {
+  float: left;
+  margin-top: 4px;
+  margin-left: 15px;
 }
 </style>
