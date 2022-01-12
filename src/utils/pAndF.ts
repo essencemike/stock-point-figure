@@ -95,10 +95,10 @@ export function pointAndFigure(
     // x
     if (current.direction > 0) {
       // 先判断当日最高价有无新高
-      if (floor(data[i].high) >= current.end && floor(data[i].high) - current.end >= boxSize) {
+      if (data[i].high >= current.end && data[i].high - current.end >= boxSize) {
         currentPushUpBox(current.end + boxSize, floor(data[i].high), boxSize)
         current.endDate = data[i].date;
-      } else if (Math.abs(ceil(data[i].low) - current.end) >= boxSize * reversal) {
+      } else if (Math.abs(data[i].low - current.end) >= boxSize * reversal) {
         // 保存上一列，重新开始一列
         result.push(current);
         const end = current.end;
@@ -113,10 +113,10 @@ export function pointAndFigure(
       }
     } else {
       // o
-      if (ceil(data[i].low) <= current.end && current.end - ceil(data[i].low) >= boxSize) {
+      if (data[i].low <= current.end && current.end - data[i].low >= boxSize) {
         currentPushDownBox(current.end - boxSize, ceil(data[i].low), boxSize)
         current.endDate = data[i].date;
-      } else if (Math.abs(floor(data[i].high) - current.end) >= boxSize * reversal) {
+      } else if (Math.abs(data[i].high - current.end) >= boxSize * reversal) {
         result.push(current);
         const end = current.end;
         current = {

@@ -1,6 +1,8 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
+import { testData2 } from './test';
+
 function parseData() {
 	return function(d: any) {
 		d.date = d.date;

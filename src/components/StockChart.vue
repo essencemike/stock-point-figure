@@ -35,6 +35,7 @@ function update() {
   if (!stock) return;
   getData(stock, period).then(data => {
     const { result = [], min = 0, max = 0 } = pointAndFigure(data, { reversal: +reversal, boxSize: +boxSize }) || {}
+    console.log(result)
     const oData = [];
     for (let i = 0; i < result.length; i++) {
       for(let j = 0; j < result[i].boxes.length; j++) {
