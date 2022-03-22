@@ -17,8 +17,8 @@ export function pointAndFigure(
     for(let i = start; i <= end; i += boxSize) {
       current.boxes.push(toFixed(i))
     }
-    const num = getSectionNum(start, end, boxSize)
-    current.end = toFixed(start + num * boxSize)
+    // const num = getSectionNum(start, end, boxSize)
+    current.end = toFixed(end)
     max = Math.max(max, current.end)
   }
   
@@ -26,8 +26,8 @@ export function pointAndFigure(
     for(let i = start; i >= end; i -= boxSize) {
       current.boxes.push(toFixed(i))
     }
-    const num = getSectionNum(start, end, boxSize)
-    current.end = toFixed(start - num * boxSize)
+    // const num = getSectionNum(start, end, boxSize)
+    current.end = toFixed(end)
     min = Math.min(min, current.end)
   }
 
@@ -39,12 +39,12 @@ export function pointAndFigure(
     return Math.round(num * 100) / 100;
   }
 
-  function floor(num: number) {
-    return Math.floor(num);
+  function floor(num: number, boxSize: number) {
+    return Math.floor(num / boxSize) * boxSize;
   }
 
-  function ceil(num: number) {
-    return Math.ceil(num);
+  function ceil(num: number, boxSize: number) {
+    return Math.ceil(num / boxSize) * boxSize;
   }
 
 
@@ -59,13 +59,13 @@ export function pointAndFigure(
   const result = [];
   const up = 1;
   const down = -1;
-  let max = floor(data[0].high);
-  let min = ceil(data[0].low);
+  let max = floor(data[0].high, boxSize);
+  let min = ceil(data[0].low, boxSize);
 
-  const firstHigh = floor(data[0].high)
-  const firstLow = ceil(data[0].low)
-  const secondHigh = floor(data[1].high)
-  const secondLow = ceil(data[1].low)
+  const firstHigh = floor(data[0].high, boxSize)
+  const firstLow = ceil(data[0].low, boxSize)
+  const secondHigh = floor(data[1].high, boxSize)
+  const secondLow = ceil(data[1].low, boxSize)
 
   if (gain >= drop) {
     const num = getSectionNum(secondHigh, firstLow, boxSize)
@@ -96,7 +96,7 @@ export function pointAndFigure(
     if (current.direction > 0) {
       // 先判断当日最高价有无新高
       if (data[i].high >= current.end && data[i].high - current.end >= boxSize) {
-        currentPushUpBox(current.end + boxSize, floor(data[i].high), boxSize)
+        currentPushUpBox(current.end + boxSize, floor(data[i].high, boxSize), boxSize)
         current.endDate = data[i].date;
       } else if (Math.abs(data[i].low - current.end) >= boxSize * reversal) {
         // 保存上一列，重新开始一列
@@ -109,12 +109,12 @@ export function pointAndFigure(
           endDate: data[i].date,
           boxes: [],
         };
-        currentPushDownBox(end - boxSize, ceil(data[i].low), boxSize)
+        currentPushDownBox(end - boxSize, ceil(data[i].low, boxSize), boxSize)
       }
     } else {
       // o
       if (data[i].low <= current.end && current.end - data[i].low >= boxSize) {
-        currentPushDownBox(current.end - boxSize, ceil(data[i].low), boxSize)
+        currentPushDownBox(current.end - boxSize, ceil(data[i].low, boxSize), boxSize)
         current.endDate = data[i].date;
       } else if (Math.abs(data[i].high - current.end) >= boxSize * reversal) {
         result.push(current);
@@ -126,7 +126,7 @@ export function pointAndFigure(
           endDate: data[i].date,
           boxes: [],
         };
-        currentPushUpBox(end + boxSize, floor(data[i].high), boxSize)
+        currentPushUpBox(end + boxSize, floor(data[i].high, boxSize), boxSize)
       }
     }
   }
@@ -134,5 +134,5 @@ export function pointAndFigure(
   current.endDate = data[data.length - 1].date;
   result.push(current);
 
-  return { result: result.slice(-50), max, min };
+  return { result, max, min };
 }
